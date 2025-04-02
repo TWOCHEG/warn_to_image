@@ -1,8 +1,8 @@
-async def add_warn_to_img(self, img: Image.Image, text_list: list[str], icon: Image.Image) -> Image.Image:
+async def add_warn_to_img(img: Image.Image, text_list: list[str], icon: Image.Image) -> Image.Image:
         img = img.convert("RGB").resize((1024, 1024))
         
         blurred = img.filter(ImageFilter.GaussianBlur(radius=30))
-
+        
         overlay_img = icon.convert('RGBA')
         size = blurred.size
         overlay_img = overlay_img.resize((int(size[0] / 2), int(size[1] / 2)))
@@ -22,7 +22,7 @@ async def add_warn_to_img(self, img: Image.Image, text_list: list[str], icon: Im
         shadow_offset = (offset[0] + 10, offset[1] + 10)
         blurred.paste(shadow, shadow_offset, mask=shadow)
         blurred.paste(overlay_img, offset, mask=overlay_img)
-
+        
         text_mask = Image.new("L", blurred.size, 0)
         draw = ImageDraw.Draw(text_mask)
         margin_ratio = 0.05
@@ -40,14 +40,14 @@ async def add_warn_to_img(self, img: Image.Image, text_list: list[str], icon: Im
                     return ImageFont.truetype("arial.ttf", max(size, min_font_size))
                 except IOError:
                     return ImageFont.load_default()
-
+        
         def get_text_size(font_obj, text):
             try:
                 bbox = draw.textbbox((0, 0), text, font=font_obj)
                 return bbox[2] - bbox[0], bbox[3] - bbox[1]
             except AttributeError:
                 return font_obj.getsize(text)
-
+        
         fonts = []
         text_sizes = []
         for text in text_list:
@@ -74,14 +74,14 @@ async def add_warn_to_img(self, img: Image.Image, text_list: list[str], icon: Im
             
             fonts.append(current_font)
             text_sizes.append((text_width, text_height))
-
+        
         total_text_height = sum(height for _, height in text_sizes) + (len(text_list) - 1) * line_spacing
         start_y = ((blurred.height - total_text_height) // 2) + 150
         current_y = start_y
-
+        
         text_layer = Image.new("RGBA", blurred.size, (0, 0, 0, 0))
         text_draw = ImageDraw.Draw(text_layer)
-
+        
         for i, (text, font) in enumerate(zip(text_list, fonts)):
             text_width, text_height = text_sizes[i]
             x = (blurred.width - text_width) // 2
@@ -93,10 +93,10 @@ async def add_warn_to_img(self, img: Image.Image, text_list: list[str], icon: Im
             draw.text((x, current_y), text, fill=255, font=font)
             
             current_y += text_height + line_spacing
-
+        
         text_shadow = text_layer.filter(ImageFilter.GaussianBlur(radius=10))
         blurred.paste(text_shadow, (0, 0), mask=text_shadow)
-
+        
         inverted = ImageChops.invert(blurred)
         result = Image.composite(inverted, blurred, text_mask)
         return result
