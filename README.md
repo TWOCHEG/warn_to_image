@@ -28,3 +28,9 @@ result.show()
 `text_list` - список строк, будут рапсположены по порядку по вертикали
 
 `icon` - иконка к тексту для красоты, желательно квадратная и пнг
+
+# результаты
+
+![result_1](https://github.com/user-attachments/assets/5502458f-fb75-450d-b5f9-2beaaac18362)
+
+![result_2](https://github.com/user-attachments/assets/f5fc31a9-3f2c-4968-9de2-b9f08ecd42f3)
