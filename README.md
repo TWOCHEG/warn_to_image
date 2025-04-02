@@ -1,2 +1,30 @@
-# warn_to_image
-добавит крутой текс на изображение
+# использование
+
+```
+import asyncio
+import os
+import aiohttp
+from PIL import Image, ImageFilter, ImageFont, ImageDraw, ImageChops
+import base64
+from io import BytesIO
+import random
+
+
+async def add_warn_to_img(img: Image.Image, text_list: list[str], icon: Image.Image) -> Image.Image:
+    pass
+
+result = asyncio.run(
+    add_warn_to_img(
+        Image.open('clip-vit-large_images/normal_test_1.png'),
+        ['обнаружено порно', 'просьба сохранять спакойствие'],
+        Image.open('smiley_face.png')
+    )
+)
+result.show()
+```
+
+`img` - ну тут понятно
+
+`text_list` - список строк, будут рапсположены по порядку по вертикали
+
+`icon` - иконка к тексту для красоты, желательно квадратная и пнг
